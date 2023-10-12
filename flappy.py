@@ -9,6 +9,8 @@ pygame.font.init()
 WIN_WIDTH = 400
 WIN_HEIGHT = 600
 
+GEN = 0
+
 BIRD_IM1 = pygame.image.load(os.path.join("imgs", "bird1.png"))
 BIRD_IM2 = pygame.image.load(os.path.join("imgs", "bird2.png"))
 BIRD_IM3 = pygame.image.load(os.path.join("imgs", "bird3.png"))
@@ -50,7 +52,7 @@ class Bird:
         self.img = self.IMGS[0]
 
     def jump(self):
-        self.vel = -10.5 #since pygame coordinates are 0,0 at the top left and the negative y axis is towards the top, we need to have a negative velocity to go upwards in the y direction
+        self.velocity = -7.5 #since pygame coordinates are 0,0 at the top left and the negative y axis is towards the top, we need to have a negative velocity to go upwards in the y direction
         self.tick_count = 0 #keeps track of when we last jumped, reset it to 0 to know when we change direction or velocity
         self.height = self.y #keeps track of where the bird originally started moving from
 
@@ -178,7 +180,7 @@ class Base:
         win.blit(self.IMG, (self.x2, self.y))
 
 #draws the window for the game
-def draw_window(win, birds, pipes, base, score):
+def draw_window(win, birds, pipes, base, score, gen):
     #draw the bg, blit draws
     win.blit(BG_IMG, (0,0))
 
@@ -187,6 +189,9 @@ def draw_window(win, birds, pipes, base, score):
     
     text = STAT_FONT.render("Score: " + str(score), 1, (255,255,255))
     win.blit(text, (WIN_WIDTH-10-text.get_width(), 10))
+
+    text = STAT_FONT.render("Gen: " + str(gen), 1, (255,255,255))
+    win.blit(text, (10, 10))
     base.draw(win)
     for bird in birds:
         bird.draw(win)
@@ -196,6 +201,8 @@ def draw_window(win, birds, pipes, base, score):
 
 
 def main(genomes, config): #the parameters of the fitness function should have genomes, config(genomes is the number NN controlling the birds)
+    global GEN
+    GEN += 1
     nets = []
     ge = [] #track genomes' fitness based on how far they move
     birds = []
@@ -279,7 +286,7 @@ def main(genomes, config): #the parameters of the fitness function should have g
                 ge.pop(x)
 
         base.move()
-        draw_window(win, birds, pipes, base, score)
+        draw_window(win, birds, pipes, base, score, GEN)
 
 
 
