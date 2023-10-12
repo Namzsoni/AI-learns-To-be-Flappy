@@ -1,0 +1,6 @@
+Objects:
+- pipes
+- bird
+- ground
+
+First program the three classes for all the objects
